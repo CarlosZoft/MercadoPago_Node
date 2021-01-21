@@ -30,13 +30,34 @@ app.get("/pagar", async (req,res)=>{
     }
     try{
         var pagamento = await MercadoPago.preferences.create(data);
-        console.log(pagamento);
+        res.status = 200;
         return res.redirect(pagamento.body.init_point)
     }
     catch(err){
         console.error(err);
+        res.status = 401;
     }
 
+})
+app.post("/notification", (req,res)=>{
+    var id = req.query.id;
+
+    setTimeout(() =>{
+        var filter = {
+            "order.id": id
+        }
+    },20000)
+    MercadoPago.payment.search({
+        qs: filter
+    }).then(data => {
+        var pagamento = data.body.result[0];
+        if(pagamento != undefined){
+            console.log(pagamento.external_reference);
+            console.log(pagamento.status);
+        }
+        else console.log("pagamento não existe");
+    }).catch(err => console.log(err));
+    res.send("OK")
 })
 app.listen(3030,(req,res) =>{
     console.log("app running");

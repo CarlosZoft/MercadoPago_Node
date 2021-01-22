@@ -1,1 +1,3 @@
-# MercadoPago_Node
+#Mercado Pago no NodeJS
+
+Usando api para pagamentos.
